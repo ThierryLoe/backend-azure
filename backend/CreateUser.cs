@@ -10,18 +10,18 @@ using Newtonsoft.Json;
 
 namespace backend
 {
-    public class Function1
+    public class CreateUser
     {
         protected ThDbContext context;
 
-        public Function1(ThDbContext context)
+        public CreateUser(ThDbContext context)
         {
             this.context = context;
         }
 
-        [FunctionName("Function1")]
+        [FunctionName("create")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "user")] HttpRequest req,
             ILogger log)
         {
             string firstname = req.Query["firstname"];
@@ -32,7 +32,7 @@ namespace backend
             person.LastName = lastname;
 
             context.Persons.Add(person);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return new OkResult();
         }

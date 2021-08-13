@@ -20,9 +20,9 @@ namespace backend
             this.context = context;
         }
 
-        [FunctionName("DeleteUser")]
+        [FunctionName("delete")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "user")] HttpRequest req,
             ILogger log)
         {
             int id = Convert.ToInt32(req.Query["id"]);
@@ -30,9 +30,9 @@ namespace backend
             var person = new Person() { PersonId = id };
 
             context.Persons.Attach(person);
-            context.Persons.Remove(person);
-
+            person.Deleted = true;
             context.SaveChanges();
+            
             return new OkResult();
 
         }

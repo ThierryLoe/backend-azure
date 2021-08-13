@@ -11,24 +11,21 @@ using System.Linq;
 
 namespace backend
 {
-    public class Function2
+    public class AllUsers
     {
         protected ThDbContext context;
 
-        public Function2(ThDbContext context)
+        public AllUsers(ThDbContext context)
         {
             this.context = context;
         }
 
-        [FunctionName("Function2")]
+        [FunctionName("AllUsers")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "user")] HttpRequest req,
             ILogger log)
         {
-            
-            int id = Convert.ToInt32(req.Query["id"]);
-
-            var person = context.Persons.FirstOrDefault(p => p.PersonId == id);
+            var person = context.Persons.Where(p => p.Deleted == false).ToList();
 
             return new OkObjectResult(person);
         }

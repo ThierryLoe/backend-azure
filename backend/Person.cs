@@ -10,5 +10,6 @@ namespace backend
         public int PersonId { get; set; }
         public string LastName { get; set; }
         public string FirstName { get; set; }
+        public bool Deleted { get; set; }
     }
 }
