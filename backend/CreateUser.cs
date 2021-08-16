@@ -21,18 +21,24 @@ namespace backend
 
         [FunctionName("create")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "user")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "user")] HttpRequest req,
             ILogger log)
         {
             string firstname = req.Query["firstname"];
             string lastname = req.Query["lastname"];
 
-            var person = new Person();
-            person.FirstName = firstname;
-            person.LastName = lastname;
-
-            context.Persons.Add(person);
-            await context.SaveChangesAsync();
+            if (firstname != "" && lastname != "")
+            {
+                var person = new Person();
+                person.FirstName = firstname;
+                person.LastName = lastname;
+                context.Persons.Add(person);
+                await context.SaveChangesAsync();
+            }
+            else
+            {
+                return new BadRequestResult();
+            }
 
             return new OkResult();
         }
